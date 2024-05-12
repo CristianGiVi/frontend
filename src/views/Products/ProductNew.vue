@@ -1,6 +1,9 @@
 <template>
   <div class="row mt-3">
     <div class="col-md-6 offset-md-3">
+      <div class="alert alert-danger" v-if="error">
+        {{ errorMessage }}
+      </div>
       <div class="card">
         <div class="card-header bg-dark text-white text-center">
           Registrar nuevo producto
@@ -23,11 +26,14 @@
 
 <script>
 import axios from 'axios';
+
 export default {
   data() {
     return {
       productName: '',
-      productPrice: ''
+      productPrice: '',
+      error: false,
+      errorMessage: '' 
     };
   },
   methods: {
@@ -36,13 +42,21 @@ export default {
         name: this.productName,
         value: this.productPrice
       };
-      axios.post('http://localhost/laravel/BackendPruebaTecnicaSumiLaravel/public/products/create', newProduct)
+      axios.post('http://localhost/laravel/test/public/products/create', newProduct)
         .then(response => {
-          this.$router.push('/products');
+          if(response.data.HttpStatus  == 409){
+            this.error = true;
+            this.errorMessage = 'Ya existe un producto con este nombre';
+          } else {
+            this.$router.push('/products');
+          }
+          
         })
-        .catch(error => {
-          console.error('Error al crear el producto:', error);
-        });
+        .catch(
+          error => {
+                    console.error(error);
+                  }
+        );
     }
   }
 };

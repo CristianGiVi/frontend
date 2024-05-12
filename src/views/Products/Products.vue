@@ -66,31 +66,36 @@
         ,methods: {
             getProducts(){
                 this.loading = true;
-                axios.get('http://localhost/laravel/BackendPruebaTecnicaSumiLaravel/public/products')
+                axios.get('http://localhost/laravel/test/public/products')
                 .then(
                     res => {
-                        this.products = res.data;
+                        this.products = res.data.data;
+                        this.loading = false;
+                    }
+                ).catch(
+                    error => {
+                        console.error(error);
                         this.loading = false;
                     }
                 );
             },
 
             searchProducts() {
-                const searchTerm = this.$refs.searchInput.value.trim(); // Eliminar espacios en blanco al inicio y al final
-                if(searchTerm){ // Verificar si searchTerm no está vacío
+                const searchTerm = this.$refs.searchInput.value.trim();
+
+                if(searchTerm){
                     this.loading = true;
-                    axios.get(`http://localhost/laravel/BackendPruebaTecnicaSumiLaravel/public/products/${searchTerm}`)
+                    axios.get(`http://localhost/laravel/test/public/products/${searchTerm}`)
                     .then(
                         res => {
-                            this.products = res.data;
+                            this.products = res.data.data;
                             this.loading = false;
                         }
                     )
                     .catch(
                         error => {
-                            alert('Error al buscar productos');
-                            console.error(error);
-                            this.loading = false; // Asegúrate de establecer loading en false incluso si hay un error
+                            this.loading = false;
+                            return
                         }
                     );
                 } else {
@@ -100,7 +105,7 @@
             },
 
             deleteProduct(id) {
-                axios.delete(`http://localhost/laravel/BackendPruebaTecnicaSumiLaravel/public/products/delete/${id}`)
+                axios.delete(`http://localhost/laravel/test/public/products/delete/${id}`)
                 .then(
                     res => {
                         this.getProducts();
@@ -108,7 +113,6 @@
                 )
                 .catch(
                     error => {
-                        alert('Error al eliminar el producto');
                         console.error(error);
                     }
                 );
