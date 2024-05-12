@@ -43,19 +43,20 @@ export default {
         password: this.userPassword
       };
 
-      axios.post('http://localhost/laravel/BackendPruebaTecnicaSumiLaravel/public/login', userData)
+      axios.post('http://localhost/laravel/test/public/login', userData)
         .then(response => {
-          if (!response.data) {
+          if(response.data.HttpStatus != 200){
             this.error = true;
-            this.errorMessage = 'Credenciales inválidas. Por favor, inténtalo de nuevo.';
+            this.errorMessage = 'Credenciales inválidas';
           } else {
-            console.log('Inicio de sesión exitoso:', response.data);
             this.$router.push('/products');
           }
         })
-        .catch(error => {
-          console.error('Error al iniciar sesión:', error);
-        });
+        .catch(
+          error => {
+                    console.error(error);
+                  }
+        );
     }
   }
 };
